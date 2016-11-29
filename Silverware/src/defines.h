@@ -1,7 +1,6 @@
 
 // defines for things that do not normally need changing
 
-
 #define MOTOR_BL 0
 #define MOTOR_FL 1
 #define MOTOR_FR 3
@@ -28,7 +27,7 @@
 #define CH_EXPERT 1
 #define CH_HEADFREE 2
 #define CH_RTH 3
-*/
+ */
 
 #define CH_ON (AUXNUMBER - 2)
 #define CH_OFF (AUXNUMBER - 1)
@@ -85,14 +84,3 @@
 #define uint32 uint_fast32_t
 #define uint16 uint_fast16_t
 #define uint8 uint_fast8_t
-
-
-
-
-
-
-
-
-
-
-

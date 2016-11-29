@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-*/
+ */
 
 
 //#define RECTANGULAR_RULE_INTEGRAL
@@ -41,33 +41,26 @@ THE SOFTWARE.
 
 
 
-// Kp											ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 17.0e-2 , 17.0e-2  , 10e-1 }; 
+// Kp					ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = {17.0e-2, 17.0e-2, 10e-1};
 
-// Ki											ROLL       PITCH     YAW
-float pidki[PIDNUMBER] = { 15e-1  , 15e-1 , 5e-1 };	
+// Ki					ROLL       PITCH     YAW
+float pidki[PIDNUMBER] = {15e-1, 15e-1, 5e-1};
 
-// Kd											ROLL       PITCH     YAW
-float pidkd[PIDNUMBER] = { 6.8e-1 , 6.8e-1  , 0.0e-1 };	
+// Kd					ROLL       PITCH     YAW
+float pidkd[PIDNUMBER] = {6.8e-1, 6.8e-1, 0.0e-1};
 
 // "setpoint weighting" 0.0 - 1.0 where 0.0 = normal pid
-float b[3] = { 0.0 , 0.0 , 0.0};
+float b[3] = {0.0, 0.0, 0.0};
 
-
-
-
-
-// output limit			
-const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
+// output limit
+const float outlimit[PIDNUMBER] = {0.8, 0.8, 0.4};
 
 // limit of integral term (abs)
-const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
-
-
-
+const float integrallimit[PIDNUMBER] = {0.8, 0.8, 0.4};
 
 // non changable things below
-float ierror[PIDNUMBER] = { 0 , 0 , 0};	
+float ierror[PIDNUMBER] = {0, 0, 0};
 
 float pidoutput[PIDNUMBER];
 
@@ -101,89 +94,82 @@ float timefactor;
 
 void pid_precalc()
 {
-	timefactor = 0.0032f / looptime;
+    timefactor = 0.0032f / looptime;
 }
 
-float pid(int x )
-{ 
+float pid(int x)
+{
+    if (onground)
+    {
+        ierror[x] *= 0.8f;
+    }
 
-        if (onground) 
-				{
-           ierror[x] *= 0.8f;
-				}
-	
-				int iwindup = 0;
-				if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
-				{
-					iwindup = 1;		
-				}
-				if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
-				{
-					iwindup = 1;				
-				}
-        if ( !iwindup)
-				{
-				#ifdef MIDPOINT_RULE_INTEGRAL
-				 // trapezoidal rule instead of rectangular
-         ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f *  pidki[x] * looptime;
-				 lasterror[x] = error[x];
-				#endif
-					
-				#ifdef RECTANGULAR_RULE_INTEGRAL
-				 ierror[x] = ierror[x] + error[x] *  pidki[x] * looptime;
-				 lasterror[x] = error[x];					
-				#endif
-					
-				#ifdef SIMPSON_RULE_INTEGRAL
-					// assuming similar time intervals
-				 ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
-					lasterror2[x] = lasterror[x];
-					lasterror[x] = error[x];
-					#endif
-					
-				}
-				
-				limitf( &ierror[x] , integrallimit[x] );
-				
-				// P term
-          pidoutput[x] = error[x] * ( 1 - b[x])* pidkp[x] ;
-				
-				// b
-          pidoutput[x] +=  - ( b[x])* pidkp[x] * gyro[x]  ;
-				
-				// I term	
-					pidoutput[x] += ierror[x];
-			
-				// D term		  
+    int iwindup = 0;
+    if ((pidoutput[x] == outlimit[x])&& (error[x] > 0))
+    {
+        iwindup = 1;
+    }
+    if ((pidoutput[x] == -outlimit[x])&& (error[x] < 0))
+    {
+        iwindup = 1;
+    }
+    if (!iwindup)
+    {
+#ifdef MIDPOINT_RULE_INTEGRAL
+        // trapezoidal rule instead of rectangular
+        ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f * pidki[x] * looptime;
+        lasterror[x] = error[x];
+#endif
 
-				#ifdef NORMAL_DTERM
-					pidoutput[x] = pidoutput[x] - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor  ;
-					lastrate[x] = gyro[x];
-				#endif
+#ifdef RECTANGULAR_RULE_INTEGRAL
+        ierror[x] = ierror[x] + error[x] * pidki[x] * looptime;
+        lasterror[x] = error[x];
+#endif
 
-				#ifdef SECOND_ORDER_DTERM 
-					pidoutput[x] = pidoutput[x] - ( -( 0.083333333f) *gyro[x] + (0.666666f) * lastratexx[x][0]
-								- (0.666666f) * lastratexx[x][2] + ( 0.083333333f) * lastratexx[x][3]) * pidkd[x] * timefactor 						;
-				
-					lastratexx[x][3] = lastratexx[x][2];
-					lastratexx[x][2] = lastratexx[x][1];
-					lastratexx[x][1] = lastratexx[x][0];
-					lastratexx[x][0] = gyro[x];
-				#endif
-			  #ifdef NEW_DTERM
-					pidoutput[x] = pidoutput[x] - ( ( 0.5f) *gyro[x] 
-								- (0.5f) * lastratexx[x][1] ) * pidkd[x] * timefactor  ;
-									
-					lastratexx[x][1] = lastratexx[x][0];
-					lastratexx[x][0] = gyro[x];
-			  #endif
-				
+#ifdef SIMPSON_RULE_INTEGRAL
+        // assuming similar time intervals
+        ierror[x] = ierror[x] + 0.166666f * (lasterror2[x] + 4 * lasterror[x] + error[x]) * pidki[x] * looptime;
+        lasterror2[x] = lasterror[x];
+        lasterror[x] = error[x];
+#endif
+    }
 
-				  limitf(  &pidoutput[x] , outlimit[x]);
+    limitf(&ierror[x], integrallimit[x]);
 
+    // P term
+    pidoutput[x] = error[x] * (1 - b[x]) * pidkp[x];
 
+    // b
+    pidoutput[x] += -(b[x]) * pidkp[x] * gyro[x];
 
-return pidoutput[x];		 		
+    // I term
+    pidoutput[x] += ierror[x];
+
+    // D term
+
+#ifdef NORMAL_DTERM
+    pidoutput[x] = pidoutput[x] - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+    lastrate[x] = gyro[x];
+#endif
+
+#ifdef SECOND_ORDER_DTERM
+    pidoutput[x] = pidoutput[x] - (-(0.083333333f) * gyro[x] + (0.666666f) * lastratexx[x][0]
+            - (0.666666f) * lastratexx[x][2] + (0.083333333f) * lastratexx[x][3]) * pidkd[x] * timefactor;
+
+    lastratexx[x][3] = lastratexx[x][2];
+    lastratexx[x][2] = lastratexx[x][1];
+    lastratexx[x][1] = lastratexx[x][0];
+    lastratexx[x][0] = gyro[x];
+#endif
+#ifdef NEW_DTERM
+    pidoutput[x] = pidoutput[x] - ((0.5f) * gyro[x]
+            - (0.5f) * lastratexx[x][1]) * pidkd[x] * timefactor;
+
+    lastratexx[x][1] = lastratexx[x][0];
+    lastratexx[x][0] = gyro[x];
+#endif
+
+    limitf(&pidoutput[x], outlimit[x]);
+
+    return pidoutput[x];
 }
-
-

@@ -21,12 +21,11 @@
 
 // BUZZER pin settings - buzzer active "high"
 // SWDAT and SWCLK pins OK here
-// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK 
-#define BUZZER_PIN       GPIO_Pin_x 
+// GPIO_Pin_13 // SWDAT - GPIO_Pin_14 // SWCLK
+#define BUZZER_PIN       GPIO_Pin_x
 #define BUZZER_PIN_PORT  GPIOA
 // x (micro)seconds after loss of tx or low bat before buzzer starts
-#define BUZZER_DELAY     30e6 
-
+#define BUZZER_DELAY     30e6
 
 #define LED_NUMBER 1
 
@@ -55,7 +54,7 @@
 // softi2c pins definitons:
 // sda - out/in , sck - out
 
-// disable softi2c pins 
+// disable softi2c pins
 //#define DISABLE_SOFTI2C_PINS
 
 // i2c driver to use ( dummy - disables i2c )
@@ -65,7 +64,7 @@
 //#define USE_SOFTWARE_I2C
 //#define USE_DUMMY_I2C
 
-// I2C speed: fast = no delays 
+// I2C speed: fast = no delays
 // slow1 = for i2c without pull-up resistors
 // slow2 = i2c failsafe speed
 //#define SOFTI2C_SPEED_FAST
@@ -121,7 +120,7 @@
 // SPI PINS DEFINITONS ( for radio ic )
 // MOSI , CLK , SS - outputs , MISO input
 
-//disable pins so they don't interfere with other pins 
+//disable pins so they don't interfere with other pins
 //#define DISABLE_SPI_PINS
 
 #define SPI_MOSI_PIN GPIO_Pin_1
@@ -149,7 +148,7 @@
 
 
 
-// PWM PINS DEFINITIONS 
+// PWM PINS DEFINITIONS
 // currently pins PA0 to PA3 , PA5 , PA8 to PA11 supported
 
 // pwm driver = brushed motors
@@ -260,14 +259,10 @@
 
 // gyro orientation
 // the expected orientation is with the dot in the front-left corner
-// use this to rotate to the correct orientation 
+// use this to rotate to the correct orientation
 // rotations performed in order
 //#define SENSOR_ROTATE_45_CCW
 //#define SENSOR_ROTATE_90_CW
 //#define SENSOR_ROTATE_90_CCW
 #define SENSOR_ROTATE_180
 //#define SENSOR_FLIP_180
-
-
-
-

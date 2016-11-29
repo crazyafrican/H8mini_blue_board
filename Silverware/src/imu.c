@@ -34,7 +34,7 @@ extern debug_type debug;
 #define ACC_MAX 1.3f
 
 
-float GEstG[3] = { 0, 0, ACC_1G };
+float GEstG[3] = {0, 0, ACC_1G};
 
 float attitude[3];
 
@@ -42,44 +42,40 @@ extern float gyro[3];
 extern float accel[3];
 extern float accelcal[3];
 
-
 void imu_init(void)
 {
-	// init the gravity vector with accel values
-	for (int xx = 0; xx < 100; xx++)
-	  {
-		  sixaxis_read();
+    // init the gravity vector with accel values
+    for (int xx = 0; xx < 100; xx++)
+    {
+        sixaxis_read();
 
-		  for (int x = 0; x < 3; x++)
-		    {
-			    lpf(&GEstG[x], accel[x]* ( 1/ 2048.0f) , 0.85);
-		    }
-		  delay(1000);
-
-
-	  }
+        for (int x = 0; x < 3; x++)
+        {
+            lpf(&GEstG[x], accel[x]* (1 / 2048.0f), 0.85);
+        }
+        delay(1000);
+    }
 }
 
 // from http://en.wikipedia.org/wiki/Fast_inverse_square_root
 // originally from quake3 code
 
-float Q_rsqrt( float number )
+float Q_rsqrt(float number)
 {
+    long i;
+    float x2, y;
+    const float threehalfs = 1.5F;
 
-	long i;
-	float x2, y;
-	const float threehalfs = 1.5F;
+    x2 = number * 0.5F;
+    y = number;
+    i = *(long *) &y;
+    i = 0x5f3759df - (i >> 1);
+    y = *(float *) &i;
+    y = y * (threehalfs - (x2 * y * y)); // 1st iteration
+    y = y * (threehalfs - (x2 * y * y)); // 2nd iteration, this can be removed
+    //	y  = y * ( threehalfs - ( x2 * y * y ) );   // 3nd iteration, this can be removed
 
-	x2 = number * 0.5F;
-	y  = number;
-	i  = * ( long * ) &y;                       
-	i  = 0x5f3759df - ( i >> 1 );               
-	y  = * ( float * ) &i;
-	y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
-//	y  = y * ( threehalfs - ( x2 * y * y ) );   // 3nd iteration, this can be removed
-	
-	return y;
+    return y;
 }
 
 
@@ -91,146 +87,129 @@ float atan2approx(float y, float x);
 
 float calcmagnitude(float vector[3])
 {
-	float accmag = 0;
-	for (uint8_t axis = 0; axis < 3; axis++)
-	  {
-		  accmag += vector[axis] * vector[axis];
-	  }
-	accmag = 1.0f/Q_rsqrt(accmag);
-	return accmag;
+    float accmag = 0;
+    for (uint8_t axis = 0; axis < 3; axis++)
+    {
+        accmag += vector[axis] * vector[axis];
+    }
+    accmag = 1.0f / Q_rsqrt(accmag);
+    return accmag;
 }
-
 
 void vectorcopy(float *vector1, float *vector2)
 {
-	for (int axis = 0; axis < 3; axis++)
-	  {
-		  vector1[axis] = vector2[axis];
-	  }
+    for (int axis = 0; axis < 3; axis++)
+    {
+        vector1[axis] = vector2[axis];
+    }
 }
-
 
 void imu_calc(void)
 {
+    float EstG[3];
+    float deltatime; // time in seconds
 
+    vectorcopy(&EstG[0], &GEstG[0]);
 
-	float EstG[3];
-	float deltatime;	// time in seconds
+    unsigned long time = gettime();
+    deltatime = time - gptimer;
+    gptimer = time;
+    if (deltatime < 1)
+        deltatime = 1;
+    if (deltatime > 20000)
+        deltatime = 20000;
+    deltatime = deltatime * 1e-6f; // uS to seconds
 
+    // remove bias
+    accel[0] = accel[0] - accelcal[0];
+    accel[1] = accel[1] - accelcal[1];
 
-	vectorcopy(&EstG[0], &GEstG[0]);
+    // reduce to accel in G
+    for (int i = 0; i < 3; i++)
+    {
+        accel[i] *= (1 / 2048.0f);
+    }
 
+    float deltaGyroAngle[3];
 
-	unsigned long time = gettime();
-	deltatime = time - gptimer;
-	gptimer = time;
-	if (deltatime < 1)
-		deltatime = 1;
-	if (deltatime > 20000)
-		deltatime = 20000;
-	deltatime = deltatime * 1e-6f;	// uS to seconds
+    for (int i = 0; i < 3; i++)
+    {
+        deltaGyroAngle[i] = (gyro[i]) * deltatime;
+    }
 
+    EstG[2] = EstG[2] - (deltaGyroAngle[0]) * EstG[0];
+    EstG[0] = (deltaGyroAngle[0]) * EstG[2] + EstG[0];
 
-// remove bias
-  accel[0] = accel[0] - accelcal[0];
-	accel[1] = accel[1] - accelcal[1];
+    EstG[1] = EstG[1] + (deltaGyroAngle[1]) * EstG[2];
+    EstG[2] = -(deltaGyroAngle[1]) * EstG[1] + EstG[2];
 
-
-// reduce to accel in G
-for (int i = 0; i < 3; i++)
-	  {
-		  accel[i] *= ( 1/ 2048.0f);
-	  }
-	
-
-	float deltaGyroAngle[3];
-
-	for ( int i = 0 ; i < 3 ; i++)
-	{
-	deltaGyroAngle[i] = (gyro[i]) * deltatime;
-	}
-	
-	
-	EstG[2] = EstG[2] - (deltaGyroAngle[0]) * EstG[0];
-	EstG[0] = (deltaGyroAngle[0]) * EstG[2] +  EstG[0];
-
-
-	EstG[1] =  EstG[1] + (deltaGyroAngle[1]) * EstG[2];
-	EstG[2] = -(deltaGyroAngle[1]) * EstG[1] +  EstG[2];
-
-
-	EstG[0] = EstG[0] - (deltaGyroAngle[2]) * EstG[1];
-	EstG[1] = (deltaGyroAngle[2]) * EstG[0] +  EstG[1];
-
+    EstG[0] = EstG[0] - (deltaGyroAngle[2]) * EstG[1];
+    EstG[1] = (deltaGyroAngle[2]) * EstG[0] + EstG[1];
 
 #ifdef DEBUG
-	attitude[2] += RADTODEG * gyro[2] * deltatime;
+    attitude[2] += RADTODEG * gyro[2] * deltatime;
 
-	limit180(&attitude[2]);
+    limit180(&attitude[2]);
 #endif
-// orientation vector magnitude
+    // orientation vector magnitude
 
+    // calc acc mag
+    float accmag;
 
-// calc acc mag
-	float accmag;
-
-	accmag = calcmagnitude(&accel[0]);
-	#ifdef DEBUG
-	debug.accmag= accmag;	
-	debug.gmag = calcmagnitude(&GEstG[0]);
-	#endif
-
-	static unsigned int count = 0;
-
-	if ((accmag > ACC_MIN * ACC_1G) && (accmag < ACC_MAX * ACC_1G) && !DISABLE_ACC)
-	  {	
-		  if (count >= 3 || 1)	//
-		    {
-						// normalize acc
-					for (int axis = 0; axis < 3; axis++)
-					{
-						accel[axis] = accel[axis] * ( ACC_1G / accmag);
-					}
-			    float filtcoeff = lpfcalc(deltatime, FILTERTIME);
-			    for (int x = 0; x < 3; x++)
-			      {
-				      lpf(&EstG[x], accel[x], filtcoeff);
-			      }
-		    }
-		  count++;
-	  }
-	else
-	  {			
-			// acc mag out of bounds
-		  count = 0;
-			/*
-		  if ( gettime() % 20 == 5)
-		    {
-			    float mag = 0;
-			    mag = calcmagnitude(&EstG[0]);
-
-			    // normalize orientation vector
-
-			    for (int x = 0; x < 3; x++)
-			      {
-				      EstG[x] = EstG[x] * ( ACC_1G / mag);
-			      }
-		    }
-			*/
-	  }
-
-	vectorcopy(&GEstG[0], &EstG[0]);
+    accmag = calcmagnitude(&accel[0]);
 #ifdef DEBUG
-	attitude[0] = atan2approx(EstG[0], EstG[2]) ;
+    debug.accmag = accmag;
+    debug.gmag = calcmagnitude(&GEstG[0]);
+#endif
 
-	attitude[1] = atan2approx(EstG[1], EstG[2])  ;
+    static unsigned int count = 0;
+
+    if ((accmag > ACC_MIN * ACC_1G) && (accmag < ACC_MAX * ACC_1G) && !DISABLE_ACC)
+    {
+        if (count >= 3 || 1) //
+        {
+            // normalize acc
+            for (int axis = 0; axis < 3; axis++)
+            {
+                accel[axis] = accel[axis] * (ACC_1G / accmag);
+            }
+            float filtcoeff = lpfcalc(deltatime, FILTERTIME);
+            for (int x = 0; x < 3; x++)
+            {
+                lpf(&EstG[x], accel[x], filtcoeff);
+            }
+        }
+        count++;
+    }
+    else
+    {
+        // acc mag out of bounds
+        count = 0;
+        /*
+      if ( gettime() % 20 == 5)
+        {
+            float mag = 0;
+            mag = calcmagnitude(&EstG[0]);
+
+            // normalize orientation vector
+
+            for (int x = 0; x < 3; x++)
+              {
+                  EstG[x] = EstG[x] * ( ACC_1G / mag);
+              }
+        }
+         */
+    }
+
+    vectorcopy(&GEstG[0], &EstG[0]);
+#ifdef DEBUG
+    attitude[0] = atan2approx(EstG[0], EstG[2]);
+
+    attitude[1] = atan2approx(EstG[1], EstG[2]);
 #endif
 }
 
-
-
-#define M_PI  3.14159265358979323846	/* pi */
-
+#define M_PI  3.14159265358979323846 /* pi */
 
 #define OCTANTIFY(_x, _y, _o)   do {                            \
     float _t;                                                   \
@@ -241,24 +220,24 @@ for (int i = 0; i < 3; i++)
 } while(0);
 
 // +-0.09 deg error
+
 float atan2approx(float y, float x)
 {
 
-	if (x == 0)
-		x = 123e-15f;
-	float phi = 0;
-	float dphi;
-	float t;
+    if (x == 0)
+        x = 123e-15f;
+    float phi = 0;
+    float dphi;
+    float t;
 
-	OCTANTIFY(x, y, phi);
+    OCTANTIFY(x, y, phi);
 
-	t = (y / x);
-	// atan function for 0 - 1 interval
-	dphi = t*( ( M_PI/4 + 0.2447f ) + t *( ( -0.2447f + 0.0663f ) + t*( - 0.0663f)) );
-	phi *= M_PI / 4;
-	dphi = phi + dphi;
-	if (dphi > (float) M_PI)
-		dphi -= 2 * M_PI;
-	return RADTODEG * dphi;
+    t = (y / x);
+    // atan function for 0 - 1 interval
+    dphi = t * ((M_PI / 4 + 0.2447f) + t * ((-0.2447f + 0.0663f) + t * (-0.0663f)));
+    phi *= M_PI / 4;
+    dphi = phi + dphi;
+    if (dphi > (float) M_PI)
+        dphi -= 2 * M_PI;
+    return RADTODEG * dphi;
 }
-

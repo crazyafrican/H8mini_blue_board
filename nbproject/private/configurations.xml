@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="gcc">
+        <df name="backup">
+        </df>
+        <in>methods.c</in>
+      </df>
+      <df name="Libraries">
+        <df name="CMSIS">
+          <df name="Device">
+            <df name="ST">
+              <df name="STM32F0xx">
+                <df name="Include">
+                  <in>stm32f0xx.h</in>
+                  <in>system_stm32f0xx.h</in>
+                </df>
+                <df name="Source">
+                  <df name="Templates">
+                    <df name="arm">
+                      <in>startup_stm32f030.s</in>
+                      <in>startup_stm32f031.s</in>
+                      <in>startup_stm32f042.s</in>
+                      <in>startup_stm32f051.s</in>
+                      <in>startup_stm32f072.s</in>
+                      <in>startup_stm32f0xx.s</in>
+                      <in>startup_stm32f0xx_ld.s</in>
+                    </df>
+                    <df name="gcc_ride7">
+                      <in>startup_stm32f030.s</in>
+                      <in>startup_stm32f031.s</in>
+                      <in>startup_stm32f042.s</in>
+                      <in>startup_stm32f051.s</in>
+                      <in>startup_stm32f072.s</in>
+                      <in>startup_stm32f0xx.s</in>
+                    </df>
+                    <df name="iar">
+                      <in>startup_stm32f030.s</in>
+                      <in>startup_stm32f031.s</in>
+                      <in>startup_stm32f042.s</in>
+                      <in>startup_stm32f051.s</in>
+                      <in>startup_stm32f072.s</in>
+                      <in>startup_stm32f0xx.s</in>
+                      <in>startup_stm32f0xx_ld.s</in>
+                    </df>
+                    <df name="TrueSTUDIO">
+                      <in>startup_stm32f030.s</in>
+                      <in>startup_stm32f031.s</in>
+                      <in>startup_stm32f042.s</in>
+                      <in>startup_stm32f051.s</in>
+                      <in>startup_stm32f072.s</in>
+                      <in>startup_stm32f0xx.s</in>
+                      <in>startup_stm32f0xx_ld.s</in>
+                    </df>
+                    <in>system_stm32f0xx.c</in>
+                  </df>
+                </df>
+              </df>
+            </df>
+          </df>
+          <df name="Include">
+            <in>arm_common_tables.h</in>
+            <in>arm_const_structs.h</in>
+            <in>arm_math.h</in>
+            <in>core_cm0.h</in>
+            <in>core_cm0plus.h</in>
+            <in>core_cm3.h</in>
+            <in>core_cm4.h</in>
+            <in>core_cm4_simd.h</in>
+            <in>core_cmFunc.h</in>
+            <in>core_cmInstr.h</in>
+            <in>core_sc000.h</in>
+            <in>core_sc300.h</in>
+          </df>
+          <df name="Lib">
+          </df>
+        </df>
+        <df name="STM32F0xx_StdPeriph_Driver">
+          <df name="inc">
+            <in>stm32f0xx_adc.h</in>
+            <in>stm32f0xx_can.h</in>
+            <in>stm32f0xx_cec.h</in>
+            <in>stm32f0xx_comp.h</in>
+            <in>stm32f0xx_crc.h</in>
+            <in>stm32f0xx_crs.h</in>
+            <in>stm32f0xx_dac.h</in>
+            <in>stm32f0xx_dbgmcu.h</in>
+            <in>stm32f0xx_dma.h</in>
+            <in>stm32f0xx_exti.h</in>
+            <in>stm32f0xx_flash.h</in>
+            <in>stm32f0xx_gpio.h</in>
+            <in>stm32f0xx_i2c.h</in>
+            <in>stm32f0xx_iwdg.h</in>
+            <in>stm32f0xx_misc.h</in>
+            <in>stm32f0xx_pwr.h</in>
+            <in>stm32f0xx_rcc.h</in>
+            <in>stm32f0xx_rtc.h</in>
+            <in>stm32f0xx_spi.h</in>
+            <in>stm32f0xx_syscfg.h</in>
+            <in>stm32f0xx_tim.h</in>
+            <in>stm32f0xx_usart.h</in>
+            <in>stm32f0xx_wwdg.h</in>
+          </df>
+          <df name="src">
+            <in>stm32f0xx_adc.c</in>
+            <in>stm32f0xx_can.c</in>
+            <in>stm32f0xx_cec.c</in>
+            <in>stm32f0xx_comp.c</in>
+            <in>stm32f0xx_crc.c</in>
+            <in>stm32f0xx_crs.c</in>
+            <in>stm32f0xx_dac.c</in>
+            <in>stm32f0xx_dbgmcu.c</in>
+            <in>stm32f0xx_dma.c</in>
+            <in>stm32f0xx_exti.c</in>
+            <in>stm32f0xx_flash.c</in>
+            <in>stm32f0xx_gpio.c</in>
+            <in>stm32f0xx_i2c.c</in>
+            <in>stm32f0xx_iwdg.c</in>
+            <in>stm32f0xx_misc.c</in>
+            <in>stm32f0xx_pwr.c</in>
+            <in>stm32f0xx_rcc.c</in>
+            <in>stm32f0xx_rtc.c</in>
+            <in>stm32f0xx_spi.c</in>
+            <in>stm32f0xx_syscfg.c</in>
+            <in>stm32f0xx_tim.c</in>
+            <in>stm32f0xx_usart.c</in>
+            <in>stm32f0xx_wwdg.c</in>
+          </df>
+        </df>
+      </df>
+      <df name="Silverware">
+        <df name="Listings">
+        </df>
+        <df name="Objects">
+        </df>
+        <df name="src">
+          <df name="configs">
+            <in>10 easy config.h</in>
+            <in>50 medium config.h</in>
+          </df>
+          <in>angle_pid.c</in>
+          <in>binary.h</in>
+          <in>buzzer.c</in>
+          <in>buzzer.h</in>
+          <in>config.h</in>
+          <in>control.c</in>
+          <in>control.h</in>
+          <in>debug.h</in>
+          <in>defines.h</in>
+          <in>drv_adc.c</in>
+          <in>drv_adc.h</in>
+          <in>drv_clk.c</in>
+          <in>drv_esc.c</in>
+          <in>drv_fmc.h</in>
+          <in>drv_fmc1.c</in>
+          <in>drv_gpio.c</in>
+          <in>drv_gpio.h</in>
+          <in>drv_hw_i2c.c</in>
+          <in>drv_hw_i2c.h</in>
+          <in>drv_i2c.c</in>
+          <in>drv_i2c.h</in>
+          <in>drv_pwm.c</in>
+          <in>drv_pwm.h</in>
+          <in>drv_serial.c</in>
+          <in>drv_serial.h</in>
+          <in>drv_softi2c.c</in>
+          <in>drv_softi2c.h</in>
+          <in>drv_spi.c</in>
+          <in>drv_spi.h</in>
+          <in>drv_spi_3wire.c</in>
+          <in>drv_time.c</in>
+          <in>drv_time.h</in>
+          <in>drv_xn297.c</in>
+          <in>drv_xn297_3wire.c</in>
+          <in>filter.cpp</in>
+          <in>flip_sequencer.c</in>
+          <in>flip_sequencer.h</in>
+          <in>gestures.c</in>
+          <in>gestures.h</in>
+          <in>hardware.h</in>
+          <in>imu.c</in>
+          <in>led.c</in>
+          <in>led.h</in>
+          <in>main.c</in>
+          <in>motorcurve.c</in>
+          <in>osd_ltm.c</in>
+          <in>pid.c</in>
+          <in>pid.h</in>
+          <in>project.h</in>
+          <in>rx.h</in>
+          <in>rx_bayang.h</in>
+          <in>rx_bayang_protocol.c</in>
+          <in>rx_bayang_protocol_ble.c</in>
+          <in>rx_cg023_protocol.c</in>
+          <in>rx_cx10blue_protocol.c</in>
+          <in>rx_h7_protocol.c</in>
+          <in>sixaxis.c</in>
+          <in>sixaxis.h</in>
+          <in>stickvector.c</in>
+          <in>util.c</in>
+          <in>util.h</in>
+          <in>xn297.h</in>
+        </df>
+        <in>silverware.uvguix.C</in>
+      </df>
+      <df name="Utilities">
+        <df name="Common">
+          <in>stm32_eval_legacy.h</in>
+        </df>
+        <df name="STM32_Nucleo">
+          <df name="stm32f0xx">
+            <in>stm32f0xx_nucleo.c</in>
+            <in>stm32f0xx_nucleo.h</in>
+          </df>
+        </df>
+        <in>stm32f0xx_conf.h</in>
+        <in>system_stm32f0xx.c</in>
+      </df>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>3</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

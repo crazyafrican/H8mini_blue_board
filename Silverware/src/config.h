@@ -2,6 +2,13 @@
 #include "defines.h"
 #include "hardware.h"
 
+
+/*
+ * Reset accelerometer:
+ *    push pitch stick down x3 within a few seconds, while throttle is at 0% and quadcopter is on level surface
+ */
+
+
 // pids in pid.c
 
 // rate in deg/sec
@@ -10,26 +17,24 @@
 #define MAX_RATEYAW 360.0
 
 // max angle for level mode
-#define MAX_ANGLE_HI 55.0f
+#define MAX_ANGLE_HI 20.0f
 
 // disable inbuilt expo functions
-#define DISABLE_EXPO
+//#define DISABLE_EXPO
 
 // use if your tx has no expo function
 // also comment out DISABLE_EXPO to use
 // -1 to 1 , 0 = no exp
-// positive = less sensitive near center 
+// positive = less sensitive near center
 #define EXPO_XY 0.3
 #define EXPO_YAW 0.0
-
-
 
 // battery saver
 // do not start software if battery is too low
 // flashes 2 times repeatedly at startup
 #define STOP_LOWBATTERY
 
-// under this voltage the software will not start 
+// under this voltage the software will not start
 // if STOP_LOWBATTERY is defined above
 #define STOP_LOWBATTERY_TRESH 3.3
 
@@ -47,15 +52,11 @@
 // in volts
 #define HYST 0.10
 
-
-
 // lower throttle when battery below treshold
 //#define LVC_PREVENT_RESET
 
 // threshold for above (volts)
 #define LVC_PREVENT_RESET_VOLTAGE 2.85
-
-
 
 // Gyro LPF filter frequency
 // gyro filter 0 = 250hz delay 0.97mS
@@ -68,7 +69,6 @@
 // gyro filter 7 = 3600hz delay 0.17mS
 #define GYRO_LOW_PASS_FILTER 3
 
-
 // software gyro lpf ( iir )
 // set only one below
 //#define SOFT_LPF_1ST_023HZ
@@ -80,7 +80,6 @@
 //#define SOFT_LPF_4TH_160HZ
 //#define SOFT_LPF_4TH_250HZ
 #define SOFT_LPF_NONE
-
 
 // this works only on newer boards (non mpu-6050)
 // on older boards the hw gyro setting controls the acc as well
@@ -115,7 +114,7 @@
 
 #define LEVELMODE CH_AUX1
 
-#define STARTFLIP CH_OFF
+#define STARTFLIP CH_FLIP
 
 #define LEDS_ON CH_ON
 
@@ -126,10 +125,10 @@
 
 // improves reception and enables trims if used
 // trims are incompatible with DEVO TX when used
-//#define USE_STOCK_TX
+#define USE_STOCK_TX
 
 // automatically remove center bias ( needs throttle off for 1 second )
-//#define STOCK_TX_AUTOCENTER
+#define STOCK_TX_AUTOCENTER
 
 // Gestures enable ( gestures 1 = acc only)
 //#define GESTURES1_ENABLE
@@ -150,8 +149,8 @@
 // motor curve to use
 // the pwm frequency has to be set independently
 // 720motors - use 8khz and curve none.
-#define MOTOR_CURVE_NONE
-//#define MOTOR_CURVE_6MM_490HZ
+//#define MOTOR_CURVE_NONE
+#define MOTOR_CURVE_6MM_490HZ
 //#define MOTOR_CURVE_85MM_8KHZ
 //#define MOTOR_CURVE_85MM_32KHZ
 
@@ -180,30 +179,21 @@
 
 // Flash saving features
 #define DISABLE_HEADLESS
-#define DISABLE_FLIP_SEQUENCER
+//#define DISABLE_FLIP_SEQUENCER
 
 // led brightness in-flight ( solid lights only)
 // 0- 15 range
 #define LED_BRIGHTNESS 15
 
-
-
 //#define BUZZER_ENABLE
 
 
-
-
-
-
-
-
-//##################################
+//####################################################################
 // debug / other things
 // this should not be usually changed
+//####################################################################
 
-
-
-// enable serial driver ( pin SWCLK after calibration) 
+// enable serial driver ( pin SWCLK after calibration)
 // WILL DISABLE PROGRAMMING AFTER GYRO CALIBRATION - 2 - 3 seconds after powerup)
 //#define SERIAL_ENABLE
 // enable some serial info output
@@ -250,7 +240,7 @@
 #define ENABLESTIX_TIMEOUT 1e6
 
 // overclock to 64Mhz
-//#define ENABLE_OVERCLOCK
+#define ENABLE_OVERCLOCK
 
 
 // limit minimum motor output to a value (0.0 - 1.0)
@@ -261,20 +251,15 @@
 //#define MOTOR_MAX_ENABLE
 #define MOTOR_MAX_VALUE 1.0
 
-
-
-
 #pragma diag_warning 1035 , 177 , 4017
 #pragma diag_error 260
 
 //--fpmode=fast
 
 
-
-
-
+//####################################################################
 // define logic - do not change
-///////////////
+//####################################################################
 
 // used for pwm calculations
 #ifdef ENABLE_OVERCLOCK
@@ -285,13 +270,13 @@
 
 // not needed / functional without level mode
 #ifdef ACRO_ONLY
-	#define DISABLE_FLIP_SEQUENCER
-	#undef AUTO_THROTTLE
+#define DISABLE_FLIP_SEQUENCER
+#undef AUTO_THROTTLE
 #endif
 
 #ifdef MOTOR_BEEPS
- #ifdef USE_ESC_DRIVER
- #warning "MOTOR BEEPS_WORKS WITH BRUSHED MOTORS ONLY"
+#ifdef USE_ESC_DRIVER
+#warning "MOTOR BEEPS_WORKS WITH BRUSHED MOTORS ONLY"
 #endif
 #endif
 
@@ -304,16 +289,3 @@
 #ifdef RX_BAYANG_PROTOCOL_BLE_BEACON
 #undef STOP_LOWBATTERY
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-

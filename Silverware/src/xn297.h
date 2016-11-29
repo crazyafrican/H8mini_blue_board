@@ -1,14 +1,12 @@
 
-
-void xn_writerxaddress(  int *addr )	;
-void xn_writereg( int reg , int val);
-int xn_command( int command);
-int xn_readreg( int reg);
-void _spi_write_address( int reg, int val);
-void xn_readpayload( int *data , int size );
-void xn_writepayload( int data[] , int size );
-void xn_writetxaddress(  int *addr )	;
-
+void xn_writerxaddress(int *addr);
+void xn_writereg(int reg, int val);
+int xn_command(int command);
+int xn_readreg(int reg);
+void _spi_write_address(int reg, int val);
+void xn_readpayload(int *data, int size);
+void xn_writepayload(int data[], int size);
+void xn_writetxaddress(int *addr);
 
 // registers
 #define CONFIG      0x00
@@ -62,7 +60,7 @@ void xn_writetxaddress(  int *addr )	;
 #define PLL_LOCK    4
 #define RF_DR       3
 #define RF_PWR      1
-#define LNA_HCURR   0        
+#define LNA_HCURR   0
 #define RX_DR       6
 #define TX_DS       5
 #define MAX_RT      4
@@ -86,17 +84,3 @@ void xn_writetxaddress(  int *addr )	;
 #define FLUSH_RX      0xE2
 #define REUSE_TX_PL   0xE3
 #define NOP           0xFF
-
-
-
-
-
-
-
-
-
-
-
-
-
-
